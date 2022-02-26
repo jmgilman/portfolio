@@ -43,7 +43,7 @@ I have produced.
 
 let pi1 = `
 This project was my first complete project that I produced with Rust and
-demonstrates my ability to quickly learn new technology. I went from no
+demonstrates my ability to quickly learn new technologies. I went from no prior
 experience with the language to producing this project which is now featured as
 one of the community SDKs for Vault. This was all done within a one month
 period.
@@ -53,7 +53,7 @@ let pi2 = `
 This project was a natural continuation of the above project and utilized it to
 produce a CLI tool for generating SSH certificates. It aims to show the full
 cycle of not just writing supporting libraries, but also turning them into a
-useful tool. Take notice of the CI pipeline run by Github Actions: it
+useful tool. Take note of the CI pipeline run by Github Actions: it
 demonstrates the care and attention to detail I take in providing a richly
 automated approach to development in all of my core projects.
 `
@@ -71,11 +71,11 @@ to my team-first attitude which aims to equip others.
 
 let pi4 = `
 This project highlights my ability to tackle problems on-the-fly in a creative
-manner. This was deployed into an offline network which was previously manually
-installing software via USB drives. It utilizes automation to fetch, scan, and
-compile applications into a package for easier to audit installations. It also
-stands as another demonstration for my ability to pickup new technologies as
-prior to this project I had never worked with Powershell.
+manner. This was deployed in an offline network which was previously installing
+software via USB drives. It utilizes automation to fetch, scan, and compile
+applications into a package for easier auditing of installations. It also stands
+as another demonstration of my ability to pickup new technologies, as prior to
+this project I had never worked with Powershell.
 `
 
 // ABOUT DATA
