@@ -15,6 +15,8 @@ export const heroData = {
   cta: 'See More',
 };
 
+let resume_url = 'https://jmgilman.s3.us-west-2.amazonaws.com/resume.pdf?response-content-disposition=attachment&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIDp2PzJa0pTUD2FC8DHdIG03VmjYX2%2BEeycSuhZuRomnAiBxDlKov8KKvTrjOEcgZVFdKE5bafC5hgPBbNwYjw68riqZAggbEAAaDDk1NjAzMTYzNjA3MSIMVjjIyReR29EBNVZWKvYBUTSiFDnpg7JP88IPh8K0CofEmMVRs2NbazADebCh0%2BPOYyHZ5GWbz%2FaoZPT2f9MiRHdJFKONjZCxdD4bfCnyJaz7Yjq5oOKLvtnHzxOJ23PD8mKOJtVHoa2tmAz8tRASCFp6Zne5cKKpVzkEOTXChhC9wAqbqSYIuBismFAIcvfPmSVvBv2Lt8XCEWA1mWqoH6gd7fbCJ9xxFZU7atLtaHpQ6ozYkoDX%2F%2FaNP4AjmBhFRK%2BfFU1iW5EE65TTHJF1NAdhJvsTnx7squhT%2FO9lR2Fbxz%2B8xbMhjS3RJcyOtKFpi1LmXP6JhgU%2BHc69KFDYcj%2FdnvXSMNu7%2BZAGOuABykOoMQM%2BNMPp%2BtXDTYeTMDasOlcgqZsLlupV61Twt7zXJHPBlSwzwjz00KFJJvhQwBBWNcHIvlsjns5quF09nyxvdkz0a1cmbs1DZmJHwQRLKlezP6Uh%2BVQPtjVP9CyPUNSnu7SfFblxhwBEmGrUn1S3Nv2eNMnqu2%2Fk3%2FUyh9OlEnu5Xmi7srN29ZwHCx77G6keZtzMnlbcTdHuTnRVlJ8e64UbRTbVaVcMfC%2B7BqevDs6dLeWENT7MoaJE4t0a12W3ZAqOv4DKJSd3euSY3x7A9bzPqUDq17%2FDERxzowQ%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220301T175649Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIA55F7NCJT57X4T7VJ%2F20220301%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Signature=2b1cc9a2b962b75604d01d5cb81b2d64b105ba300e9fb4f59b52b67e9a9f0231'
+
 let p1 = `
 I have 10+ years of experience running industrial automation systems in mission
 critical environments. I have worked on large-scale compute systems starting
@@ -84,7 +86,7 @@ export const aboutData = {
   paragraphOne: p1,
   paragraphTwo: p2,
   paragraphThree: p3,
-  resume: 'https://www.resumemaker.online/es.php', // if no resume, the button will not show up
+  resume: resume_url, // if no resume, the button will not show up
 };
 
 // PROJECTS DATA
