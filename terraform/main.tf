@@ -29,11 +29,23 @@ resource "aws_iam_policy" "codepipeline-policy" {
     Statement = [
       {
         Action = [
-          "s3:GetObject",
-          "s3:PutObject"
+          "s3:*"
         ]
         Effect   = "Allow"
         Resource = aws_s3_bucket.codepipeline.arn
+      },
+      {
+        Action   = "codestar-connections:UseConnection"
+        Effect   = "Allow"
+        Resource = aws_codestarconnections_connection.github.arn
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "codebuild:BatchGetBuilds",
+          "codebuild:StartBuild"
+        ],
+        Resource = "*"
       }
     ]
   })
@@ -65,6 +77,18 @@ resource "aws_s3_bucket" "codepipeline" {
   bucket = "glab-portfolio-artifact-store"
 }
 
+resource "aws_s3_bucket_acl" "codepipeline-acl" {
+  bucket = aws_s3_bucket.codepipeline.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_versioning" "codepipeline-versioning" {
+  bucket = aws_s3_bucket.codepipeline.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 # Codepipeline
 resource "aws_codepipeline" "pipeline" {
   name     = "portfolio-codepipeline"
@@ -78,17 +102,19 @@ resource "aws_codepipeline" "pipeline" {
   stage {
     name = "Source"
     action {
-      name             = "Source"
-      category         = "Source"
-      owner            = "AWS"
-      provider         = "CodeStarSourceConnection"
-      version          = "1"
+      name     = "Source"
+      category = "Source"
+      owner    = "AWS"
+      provider = "CodeStarSourceConnection"
+      version  = "1"
+
       output_artifacts = ["source_output"]
 
       configuration = {
-        ConnectionArn    = aws_codestarconnections_connection.github.arn
-        FullRepositoryId = "jmgilman/portfolio"
-        BranchName       = "master"
+        ConnectionArn        = aws_codestarconnections_connection.github.arn
+        FullRepositoryId     = "jmgilman/portfolio"
+        BranchName           = "master"
+        OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
   }
