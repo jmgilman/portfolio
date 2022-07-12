@@ -5,6 +5,7 @@ phases:
     runtime-versions:
       nodejs: 16
     commands:
+      - "npm install --legacy-peer-deps"
       - "npm install gatsby"
   build:
     commands:
