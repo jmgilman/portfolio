@@ -10,6 +10,80 @@ terraform {
 provider "aws" {
 }
 
+## Codebuild ##
+
+# Codebuild Policy
+resource "aws_iam_policy" "codebuild-policy" {
+  name        = "PortfolioCodebuildPolicy"
+  description = "Policy for controlling codebuild permissions"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:*"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
+        Action   = "codestar-connections:UseConnection"
+        Effect   = "Allow"
+        Resource = aws_codestarconnections_connection.github.arn
+      },
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Codebuild  Role
+resource "aws_iam_role" "codebuild" {
+  name = "codebuild"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "codebuild.amazonaws.com"
+        }
+      }
+    ]
+  })
+  managed_policy_arns = [
+    aws_iam_policy.codebuild-policy.arn
+  ]
+}
+
+resource "aws_codebuild_project" "codebuild" {
+  name         = "portfolio"
+  service_role = aws_iam_role.codebuild.arn
+
+  artifacts {
+    type = "CODEPIPELINE"
+  }
+
+  environment {
+    compute_type = "BUILD_GENERAL1_SMALL"
+    image        = "aws/codebuild/amazonlinux2-x86_64-standard:4.0"
+    type         = "LINUX_CONTAINER"
+  }
+
+  source {
+    type = "CODEPIPELINE"
+  }
+}
+
 ## Codepipeline ##
 
 # Codestar Connection
@@ -32,7 +106,7 @@ resource "aws_iam_policy" "codepipeline-policy" {
           "s3:*"
         ]
         Effect   = "Allow"
-        Resource = aws_s3_bucket.codepipeline.arn
+        Resource = "*"
       },
       {
         Action   = "codestar-connections:UseConnection"
