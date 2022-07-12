@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       nodejs: 16
     commands:
-      - "npm install -g gatsby"
+      - "npm install gatsby"
   build:
     commands:
       - "npm run-script build"
