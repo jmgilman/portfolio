@@ -4,10 +4,10 @@ phases:
   install:
     commands:
       - "touch .npmignore"
-      - "npm install gatsby"
+      - "npm install -g gatsby"
   pre_build:
     commands:
-      - ‘npm install’
+      - "npm install"
   build:
     commands:
       - "npm run build"
