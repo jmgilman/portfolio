@@ -5,6 +5,13 @@ terraform {
       version = "4.22.0"
     }
   }
+
+  backend "s3" {
+    bucket  = "glab-terraform"
+    region  = "us-west-2"
+    key     = "portfolio"
+    encrypt = true
+  }
 }
 
 provider "aws" {
