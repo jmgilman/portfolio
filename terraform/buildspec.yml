@@ -1,0 +1,25 @@
+version: 0.2
+
+env:
+  parameter-store:
+    CACHIX_AUTH_TOKEN: "/portfolio/cachix-key"
+phases:
+  install:
+    commands:
+      - "cachix use jmgilman"
+      - "nix develop --profile portfolio -c npm install"
+  build:
+    commands:
+      - "nix develop --profile portfolio -c npm run-script build"
+  post_build:
+    commands:
+      - "cachix push jmgilman portfolio"
+artifacts:
+  base-directory: public
+  files:
+    - "**/*"
+  discard-paths: no
+cache:
+  paths:
+    - ".cache/*"
+    - "public/*"

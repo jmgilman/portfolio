@@ -13,6 +13,7 @@
           buildInputs = [
             pkgs.nodejs-16_x
             pkgs.nodePackages.gatsby-cli
+            pkgs.python39Full
             pkgs.terraform
           ];
         };

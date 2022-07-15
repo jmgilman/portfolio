@@ -10,6 +10,33 @@ terraform {
 provider "aws" {
 }
 
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
+## Website ##
+
+resource "aws_s3_bucket" "website" {
+  bucket = "glab-portfolio-website"
+}
+
+resource "aws_s3_bucket_acl" "example_bucket_acl" {
+  bucket = aws_s3_bucket.website.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_website_configuration" "website" {
+  bucket = aws_s3_bucket.website.bucket
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "404.html"
+  }
+}
+
 ## Codebuild ##
 
 # Codebuild Policy
@@ -39,6 +66,11 @@ resource "aws_iam_policy" "codebuild-policy" {
         ],
         Effect   = "Allow",
         Resource = "*"
+      },
+      {
+        Action   = "ssm:GetParameters"
+        Effect   = "Allow"
+        Resource = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/portfolio/cachix-key"
       }
     ]
   })
@@ -75,12 +107,13 @@ resource "aws_codebuild_project" "codebuild" {
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
-    image        = "aws/codebuild/amazonlinux2-x86_64-standard:4.0"
+    image        = "jmgilman/nix-aws-codebuild"
     type         = "LINUX_CONTAINER"
   }
 
   source {
-    type = "CODEPIPELINE"
+    type      = "CODEPIPELINE"
+    buildspec = file("buildspec.yml")
   }
 }
 
@@ -197,15 +230,34 @@ resource "aws_codepipeline" "pipeline" {
     name = "Build"
 
     action {
-      name            = "Build"
-      category        = "Build"
-      owner           = "AWS"
-      provider        = "CodeBuild"
-      version         = "1"
-      input_artifacts = ["source_output"]
+      name             = "Build"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["build_output"]
 
       configuration = {
         ProjectName = "portfolio"
+      }
+    }
+  }
+
+  stage {
+    name = "Deploy"
+
+    action {
+      name            = "Deploy"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "S3"
+      version         = "1"
+      input_artifacts = ["build_output"]
+
+      configuration = {
+        BucketName = aws_s3_bucket.website.bucket
+        Extract    = true
       }
     }
   }
