@@ -48,10 +48,17 @@ resource "aws_iam_policy" "codebuild-policy" {
     Statement = [
       {
         Action = [
-          "s3:*"
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:GetBucketVersioning",
+          "s3:PutObject",
+          "s3:PutObjectAcl"
         ]
-        Effect   = "Allow"
-        Resource = "*"
+        Effect = "Allow"
+        Resource = [
+          aws_s3_bucket.codepipeline.arn,
+          "${aws_s3_bucket.codepipeline.arn}/*"
+        ]
       },
       {
         Action   = "codestar-connections:UseConnection"
@@ -141,10 +148,19 @@ resource "aws_iam_policy" "codepipeline-policy" {
     Statement = [
       {
         Action = [
-          "s3:*"
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:GetBucketVersioning",
+          "s3:PutObject",
+          "s3:PutObjectAcl"
         ]
-        Effect   = "Allow"
-        Resource = "*"
+        Effect = "Allow"
+        Resource = [
+          aws_s3_bucket.codepipeline.arn,
+          "${aws_s3_bucket.codepipeline.arn}/*",
+          aws_s3_bucket.website.arn,
+          "${aws_s3_bucket.website.arn}/*",
+        ]
       },
       {
         Action   = "codestar-connections:UseConnection"
@@ -157,7 +173,7 @@ resource "aws_iam_policy" "codepipeline-policy" {
           "codebuild:BatchGetBuilds",
           "codebuild:StartBuild"
         ],
-        Resource = "*"
+        Resource = aws_codebuild_project.codebuild.arn
       }
     ]
   })
