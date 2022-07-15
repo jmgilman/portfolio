@@ -21,5 +21,6 @@ artifacts:
   discard-paths: no
 cache:
   paths:
-    - ".cache/*"
-    - "public/*"
+    - ".cache/**/*"
+    - "node_modules/**/*"
+    - "public/**/*"

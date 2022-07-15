@@ -105,6 +105,11 @@ resource "aws_codebuild_project" "codebuild" {
     type = "CODEPIPELINE"
   }
 
+  cache {
+    location = aws_s3_bucket.codepipeline.bucket
+    type     = "S3"
+  }
+
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
     image        = "jmgilman/nix-aws-codebuild"
@@ -258,6 +263,7 @@ resource "aws_codepipeline" "pipeline" {
       configuration = {
         BucketName = aws_s3_bucket.website.bucket
         Extract    = true
+        CannedACL  = "public-read"
       }
     }
   }
