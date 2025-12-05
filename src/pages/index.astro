@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Home Page Sections
+import Hero from '../components/home/Hero.astro';
+import Approach from '../components/home/Approach.astro';
+import Skills from '../components/home/Skills.astro';
+import FeaturedProjects from '../components/home/FeaturedProjects.astro';
+import FeaturedPosts from '../components/home/FeaturedPosts.astro';
+import CTA from '../components/home/CTA.astro';
+---
+
+<Layout
+  title="Joshua Gilman - Lead SRE"
+  description="Building reliable, performant, and cost-effective solutions"
+>
+  <Header slot="header" />
+
+  <Hero />
+  <Approach />
+  <Skills />
+  <FeaturedProjects />
+  <FeaturedPosts />
+  <CTA />
+
+  <Footer slot="footer" />
+</Layout>

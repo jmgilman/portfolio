@@ -1,0 +1,55 @@
+---
+import { profile } from '@/data/profile';
+
+const focusAreas = profile.focusAreas;
+const problemsISolve = [
+  'Unreliable deploys and noisy on-call',
+  'Runaway cloud costs and opaque spend',
+  'Slow pipelines blocking delivery',
+  'Security controls that are hard to adopt',
+];
+---
+
+<section class="bg-secondary/30 py-20">
+  <div class="container mx-auto px-4">
+    <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-center">
+      <div>
+        <h2 class="mb-3 text-3xl font-bold md:text-4xl">
+          <span class="text-primary font-mono">&gt;</span> How I Work
+        </h2>
+        <p class="text-muted-foreground max-w-2xl">
+          Pragmatic, metrics-driven SRE leadership focused on reliability, automation, and cost
+          discipline without slowing teams down.
+        </p>
+      </div>
+      <div class="border-border bg-card/60 max-w-sm rounded-lg border p-4">
+        <p class="text-primary mb-2 font-mono text-xs">// Problems I solve</p>
+        <div class="flex flex-wrap gap-2">
+          {
+            problemsISolve.map((problem) => (
+              <span class="bg-secondary text-muted-foreground border-border/60 rounded-full border px-3 py-1 text-sm">
+                {problem}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {
+        focusAreas.map((area, index) => (
+          <div
+            class="border-border bg-card/70 card-hover animate-fade-in rounded-lg border p-5"
+            style={`animation-delay: ${index * 0.05}s`}
+          >
+            <div class="flex items-start gap-3">
+              <span class="text-primary mt-1">↳</span>
+              <p class="text-foreground">{area}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

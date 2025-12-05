@@ -1,0 +1,123 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Button from '@/components/ui/Button.astro';
+import ReadingProgress from '@/components/blog/ReadingProgress.astro';
+import SocialShare from '@/components/blog/SocialShare.astro';
+import RelatedPosts from '@/components/blog/RelatedPosts.astro';
+import TableOfContents from '@/components/blog/TableOfContents.astro';
+import { formatDateLong } from '@/lib/dates';
+import Icon from '@/components/ui/Icon.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const postUrl = new URL(`/blog/${post.id}`, Astro.site || 'https://jmgilman.com').toString();
+---
+
+<Layout
+  title={`${post.data.title} - Joshua Gilman`}
+  description={post.data.excerpt}
+  type="article"
+  publishedTime={post.data.date.toISOString()}
+  modifiedTime={post.data.updatedDate?.toISOString()}
+>
+  <ReadingProgress />
+  <TableOfContents headings={headings} />
+  <Header slot="header" />
+
+  <article class="py-24" data-pagefind-body>
+    <div class="container mx-auto px-4">
+      <div class="mx-auto max-w-3xl">
+        <!-- Back Button -->
+        <Button href="/blog" variant="ghost" class="mb-8 -ml-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="mr-2"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg
+          >
+          Back to Blog
+        </Button>
+
+        <!-- Header -->
+        <header class="mb-12">
+          <!-- Meta -->
+          <div class="text-muted-foreground mb-6 flex flex-wrap items-center gap-4 text-sm">
+            <span class="flex items-center gap-1.5">
+              <Icon name="calendar" class="h-4 w-4" />
+              {formatDateLong(post.data.date)}
+            </span>
+            <span class="flex items-center gap-1.5">
+              <Icon name="clock" class="h-4 w-4" />
+              {post.data.readTime}
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="mb-6 text-4xl font-bold md:text-5xl">
+            {post.data.title}
+          </h1>
+
+          <!-- Tags -->
+          <div class="flex flex-wrap gap-2">
+            {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="prose prose-lg dark:prose-invert max-w-none">
+          <Content />
+        </div>
+
+        <!-- Related Posts -->
+        <RelatedPosts currentSlug={post.id} currentTags={post.data.tags} />
+
+        <!-- Footer -->
+        <footer class="border-border mt-16 border-t pt-8">
+          <div
+            class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
+          >
+            <SocialShare title={post.data.title} url={postUrl} tags={post.data.tags} />
+          </div>
+          <Button href="/blog" variant="outline">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mr-2"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg
+            >
+            Back to All Posts
+          </Button>
+        </footer>
+      </div>
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+</Layout>

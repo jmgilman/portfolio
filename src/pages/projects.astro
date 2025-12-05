@@ -1,0 +1,183 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { projects, getAllTags } from '@/data/projects';
+import { formatMonthYear } from '@/lib/dates';
+import Icon from '@/components/ui/Icon.astro';
+
+// Sort projects by date (newest first)
+const sortedProjects = [...projects].sort(
+  (a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf()
+);
+
+const allTags = getAllTags();
+---
+
+<Layout
+  title="Projects - Joshua Gilman"
+  description="A collection of infrastructure, automation, and platform engineering projects."
+>
+  <Header slot="header" />
+
+  <div class="py-24">
+    <div class="container mx-auto px-4">
+      <!-- Header -->
+      <div class="mb-12 max-w-3xl">
+        <h1 class="mb-4 text-4xl font-bold md:text-5xl">
+          <span class="text-primary font-mono">&gt;</span> Projects
+        </h1>
+        <p class="text-muted-foreground text-lg">
+          A collection of infrastructure, automation, and platform engineering projects I've worked
+          on throughout my career.
+        </p>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="mb-12 space-y-3">
+        <div class="relative w-full max-w-5xl">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-muted-foreground absolute top-1/2 left-3 -translate-y-1/2"
+            ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg
+          >
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search projects..."
+            class="bg-background border-input focus:ring-ring h-12 w-full rounded-md border pr-4 pl-10 font-mono text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          />
+        </div>
+
+        <div id="tag-filters" class="flex flex-wrap gap-2">
+          {
+            allTags.map((tag) => (
+              <button data-tag={tag} class="tag cursor-pointer transition-colors">
+                {tag}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div id="projects-container" class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          sortedProjects.map((project, index) => (
+            <article
+              class="group bg-card border-border card-hover animate-fade-in project-item overflow-hidden rounded-lg border"
+              style={`animation-delay: ${index * 0.05}s`}
+              data-title={project.title.toLowerCase()}
+              data-description={project.description.toLowerCase()}
+              data-tags={project.tags.join(',').toLowerCase()}
+            >
+              {/* Project Header */}
+              <div class="border-border bg-secondary/30 border-b p-6">
+                <div class="mb-4 flex items-center justify-between">
+                  <Icon name="folder" class="text-primary h-10 w-10" />
+                  <div class="flex gap-2">
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="GitHub repository"
+                      >
+                        <Icon name="github" class="h-5 w-5" />
+                      </a>
+                    )}
+                    {project.demo && (
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="Live demo"
+                      >
+                        <Icon name="external" class="h-5 w-5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <h3 class="text-foreground group-hover:text-primary text-lg font-semibold transition-colors">
+                  <a
+                    href={`/projects/${project.id}`}
+                    class="decoration-primary underline-offset-4 hover:underline"
+                  >
+                    {project.title}
+                  </a>
+                </h3>
+                {project.featured && (
+                  <span class="bg-primary text-primary-foreground mt-2 inline-block rounded px-2 py-0.5 font-mono text-xs font-medium">
+                    Featured
+                  </span>
+                )}
+              </div>
+
+              {/* Project Content */}
+              <div class="p-6">
+                <div class="space-y-3">
+                  <p class="text-muted-foreground text-sm">{project.description}</p>
+                  <div class="border-border/60 bg-secondary/30 rounded-lg border p-3">
+                    <p class="text-primary mb-1 font-mono text-xs">Impact</p>
+                    <p class="text-foreground text-sm">{project.impact}</p>
+                  </div>
+                  {/* Tags */}
+                  <div class="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </div>
+
+                  {/* Footer: role + date */}
+                  <div class="border-border/40 text-muted-foreground mt-3 flex items-center justify-between border-t pt-3 text-xs">
+                    <span>{project.role}</span>
+                    <span class="font-mono">{formatMonthYear(project.date)}</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <!-- No Results Message (hidden by default) -->
+      <div id="no-results" class="hidden py-12 text-center">
+        <p class="text-muted-foreground font-mono">
+          <span class="text-primary">404:</span> No projects found matching your criteria.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+</Layout>
+
+<script>
+  import { initSearchAndTagFilter } from '@/lib/filters';
+
+  let teardown: (() => void) | undefined;
+
+  const setup = () => {
+    teardown?.();
+    teardown = initSearchAndTagFilter({
+      searchInputSelector: '#search-input',
+      tagButtonSelector: '#tag-filters button',
+      itemSelector: '.project-item',
+      containerSelector: '#projects-container',
+      noResultsSelector: '#no-results',
+    });
+  };
+
+  setup();
+  document.addEventListener('astro:page-load', setup);
+</script>

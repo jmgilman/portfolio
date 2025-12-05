@@ -1,0 +1,70 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Button from '@/components/ui/Button.astro';
+---
+
+<Layout title="404 - Page Not Found" description="The page you're looking for doesn't exist.">
+  <Header slot="header" />
+
+  <div class="flex flex-1 items-center justify-center py-24">
+    <div class="container mx-auto px-4">
+      <div class="mx-auto max-w-2xl text-center">
+        <!-- Terminal-style 404 -->
+        <div class="bg-card border-border mb-8 overflow-hidden rounded-lg border">
+          <!-- Terminal Header -->
+          <div class="bg-secondary/50 border-border flex items-center gap-2 border-b px-4 py-2">
+            <div class="flex gap-1.5">
+              <div class="h-3 w-3 rounded-full bg-red-500"></div>
+              <div class="h-3 w-3 rounded-full bg-yellow-500"></div>
+              <div class="h-3 w-3 rounded-full bg-green-500"></div>
+            </div>
+            <span class="text-muted-foreground ml-2 font-mono text-xs">error.sh</span>
+          </div>
+
+          <!-- Terminal Content -->
+          <div class="p-8 text-left font-mono">
+            <p class="text-muted-foreground mb-2">
+              <span class="text-primary">$</span> curl -I /requested-page
+            </p>
+            <p class="mb-4 text-red-400">HTTP/1.1 404 Not Found</p>
+            <p class="text-muted-foreground mb-2">
+              <span class="text-primary">$</span> echo $?
+            </p>
+            <p class="text-foreground mb-4 text-6xl font-bold md:text-8xl">404</p>
+            <p class="text-muted-foreground">
+              <span class="text-primary">// </span>Page not found. The resource you requested could
+              not be located.
+            </p>
+          </div>
+        </div>
+
+        <p class="text-muted-foreground mb-8 text-lg">
+          Looks like this page got lost in the deployment pipeline.
+        </p>
+
+        <div class="flex flex-col justify-center gap-4 sm:flex-row">
+          <Button href="/">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mr-2"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg
+            >
+            Return Home
+          </Button>
+          <Button href="/blog" variant="outline"> Read the Blog </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+</Layout>

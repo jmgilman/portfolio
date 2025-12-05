@@ -1,0 +1,286 @@
+---
+const navItems = [
+  { label: 'Home', path: '/' },
+  { label: 'Blog', path: '/blog' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'Resume', path: '/resume' },
+  { label: 'Contact', path: '/contact' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  id="header"
+  class="fixed top-0 right-0 left-0 z-50 bg-transparent transition-all duration-300"
+>
+  <div class="container mx-auto px-4">
+    <div class="flex h-16 items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="group flex items-center gap-2 font-mono text-lg font-semibold">
+        <svg
+          class="text-primary h-5 w-5 group-hover:animate-pulse"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="4 17 10 11 4 5"></polyline>
+          <line x1="12" y1="19" x2="20" y2="19"></line>
+        </svg>
+        <span class="text-foreground">jmgilman</span>
+        <span class="text-primary">.com</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden items-center gap-8 md:flex">
+        {
+          navItems.map((item) => (
+            <a
+              href={item.path}
+              class:list={['nav-link font-mono text-sm', currentPath === item.path && 'active']}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Theme Toggle Button -->
+        <button
+          id="themeToggle"
+          type="button"
+          aria-label="Toggle theme"
+          class="hover:bg-secondary hidden rounded-lg p-2 transition-colors md:flex"
+        >
+          <!-- Sun icon (visible in dark mode) -->
+          <svg
+            class="sun hidden h-5 w-5 dark:block"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <!-- Moon icon (visible in light mode) -->
+          <svg
+            class="moon block h-5 w-5 dark:hidden"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobileMenuBtn"
+          type="button"
+          aria-label="Toggle menu"
+          class="hover:bg-secondary rounded-lg p-2 transition-colors md:hidden"
+        >
+          <svg
+            id="menuIcon"
+            class="h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg
+            id="closeIcon"
+            class="hidden h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div id="mobileMenu" class="bg-background border-border hidden border-b md:hidden">
+    <nav class="container mx-auto flex flex-col gap-4 px-4 py-4">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.path}
+            class:list={[
+              'py-2 font-mono text-sm transition-colors',
+              currentPath === item.path
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-foreground',
+            ]}
+          >
+            <span class="text-muted-foreground mr-2">&gt;</span>
+            {item.label}
+          </a>
+        ))
+      }
+      <button
+        id="mobileThemeToggle"
+        type="button"
+        class="text-muted-foreground hover:text-foreground flex items-center gap-2 py-2 font-mono text-sm transition-colors"
+      >
+        <svg
+          class="sun hidden h-4 w-4 dark:block"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg
+          class="moon block h-4 w-4 dark:hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <span class="dark:hidden">Dark Mode</span>
+        <span class="hidden dark:inline">Light Mode</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function setupHeader() {
+    window.__headerCleanup?.();
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const header = document.getElementById('header');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    const closeIcon = document.getElementById('closeIcon');
+    const themeToggle = document.getElementById('themeToggle');
+    const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+
+    // Scroll effect
+    function handleScroll() {
+      if (!header) return;
+      if (window.scrollY > 20) {
+        header.classList.add(
+          'bg-background/80',
+          'backdrop-blur-lg',
+          'border-b',
+          'border-border',
+          'shadow-sm'
+        );
+        header.classList.remove('bg-transparent');
+      } else {
+        header.classList.remove(
+          'bg-background/80',
+          'backdrop-blur-lg',
+          'border-b',
+          'border-border',
+          'shadow-sm'
+        );
+        header.classList.add('bg-transparent');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { signal, passive: true });
+    handleScroll();
+
+    // Mobile menu toggle
+    mobileMenuBtn?.addEventListener(
+      'click',
+      () => {
+        const isOpen = !mobileMenu?.classList.contains('hidden');
+        if (isOpen) {
+          mobileMenu?.classList.add('hidden');
+          menuIcon?.classList.remove('hidden');
+          closeIcon?.classList.add('hidden');
+        } else {
+          mobileMenu?.classList.remove('hidden');
+          menuIcon?.classList.add('hidden');
+          closeIcon?.classList.remove('hidden');
+        }
+      },
+      { signal }
+    );
+
+    const toggleTheme =
+      window.__toggleTheme ||
+      (() => {
+        const root = document.documentElement;
+        const currentTheme = root.classList.contains('dark') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        root.classList.toggle('dark', newTheme === 'dark');
+        root.style.colorScheme = newTheme;
+        try {
+          localStorage.setItem('theme', newTheme);
+        } catch {
+          // localStorage may be unavailable (e.g., privacy mode)
+        }
+      });
+
+    themeToggle?.addEventListener('click', toggleTheme, { signal });
+    mobileThemeToggle?.addEventListener('click', toggleTheme, { signal });
+
+    window.__headerCleanup = () => controller.abort();
+  }
+
+  const init = () => setupHeader();
+
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

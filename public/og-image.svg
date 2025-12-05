@@ -1,0 +1,49 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#34d399"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative grid pattern -->
+  <g opacity="0.1" stroke="#10b981" stroke-width="1">
+    <line x1="0" y1="100" x2="1200" y2="100"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/>
+    <line x1="0" y1="400" x2="1200" y2="400"/>
+    <line x1="0" y1="500" x2="1200" y2="500"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Accent bar -->
+  <rect x="0" y="0" width="8" height="630" fill="url(#accent)"/>
+
+  <!-- Terminal icon -->
+  <g transform="translate(80, 200)">
+    <rect x="0" y="0" width="80" height="60" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+    <text x="12" y="38" font-family="monospace" font-size="24" fill="#10b981">$_</text>
+  </g>
+
+  <!-- Main text -->
+  <text x="200" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="#f8fafc">Joshua Gilman</text>
+  <text x="200" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="36" fill="#10b981">Lead Site Reliability Engineer</text>
+
+  <!-- Tagline -->
+  <text x="200" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#94a3b8">Building reliable, performant, and cost-effective</text>
+  <text x="200" y="460" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="#94a3b8">infrastructure solutions.</text>
+
+  <!-- URL -->
+  <text x="200" y="560" font-family="monospace" font-size="24" fill="#64748b">jmgilman.com</text>
+</svg>

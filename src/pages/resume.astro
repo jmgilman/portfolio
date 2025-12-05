@@ -1,0 +1,221 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Button from '@/components/ui/Button.astro';
+import { profile, skills, experience, previousExperience, certifications } from '@/data/profile';
+
+const quickRoles = profile.quickRoles;
+
+const skillCategories = [
+  {
+    title: 'Cloud & Kubernetes',
+    skills: skills.cloud,
+  },
+  {
+    title: 'IaC & Automation',
+    skills: skills.automation,
+  },
+  {
+    title: 'Languages & Scripting',
+    skills: skills.programming,
+  },
+  {
+    title: 'Reliability & Observability',
+    skills: skills.reliability,
+  },
+];
+---
+
+<Layout
+  title="Resume - Joshua Gilman"
+  description="Lead Site Reliability Engineer with 15+ years of experience in infrastructure, automation, and platform engineering."
+>
+  <Header slot="header" />
+
+  <div class="py-16 md:py-20">
+    <div class="container mx-auto px-4">
+      <div class="mx-auto max-w-5xl space-y-10">
+        <header class="border-border border-b pb-6">
+          <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 class="text-3xl font-semibold tracking-tight md:text-4xl">
+                {profile.name}
+              </h1>
+              <p class="text-muted-foreground text-lg">
+                {profile.title}
+              </p>
+            </div>
+            <Button href="/resume.pdf"> Download PDF </Button>
+          </div>
+
+          <div
+            class="text-muted-foreground mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm"
+          >
+            <span>{profile.location}</span>
+            <span aria-hidden="true">•</span>
+            <a href={`mailto:${profile.email}`} class="hover:text-primary transition-colors">
+              {profile.email}
+            </a>
+            <span aria-hidden="true">•</span>
+            <span>{profile.phone}</span>
+            <span aria-hidden="true">•</span>
+            <a
+              href={profile.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-primary transition-colors"
+            >
+              LinkedIn
+            </a>
+          </div>
+
+          <p class="text-foreground mt-4 text-base leading-relaxed">
+            {profile.summary}
+          </p>
+        </header>
+
+        <div class="space-y-10">
+          <section class="grid gap-6 lg:grid-cols-2">
+            <div class="space-y-3">
+              <h3 class="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
+                At a glance
+              </h3>
+              <div class="text-muted-foreground space-y-3 text-sm">
+                {
+                  quickRoles.map((item) => (
+                    <div class="space-y-1">
+                      <p class="text-foreground font-medium">{item.role}</p>
+                      <p>{item.company}</p>
+                      <p class="leading-relaxed">{item.impact}</p>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
+                Technical Skills
+              </h3>
+              <div class="text-muted-foreground space-y-3 text-sm">
+                {
+                  skillCategories.map((category) => (
+                    <div class="space-y-1">
+                      <p class="text-foreground font-medium">{category.title}</p>
+                      <p>{category.skills.join(', ')}</p>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </section>
+
+          <main class="space-y-10">
+            <section class="space-y-4">
+              <h2 class="text-foreground text-xl font-semibold tracking-tight">Experience</h2>
+              <div class="space-y-6">
+                {
+                  experience.map((job) => (
+                    <div class="space-y-3">
+                      <div class="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+                        <div>
+                          <p class="text-foreground text-lg font-semibold">{job.company}</p>
+                          <p class="text-muted-foreground text-sm">{job.location}</p>
+                        </div>
+                      </div>
+
+                      {'roles' in job && job.roles ? (
+                        <div class="space-y-4">
+                          {job.roles.map((role) => (
+                            <div class="space-y-2">
+                              <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                                <p class="text-foreground font-medium">{role.title}</p>
+                                <span class="text-muted-foreground font-mono text-xs tracking-wide uppercase">
+                                  {role.period}
+                                </span>
+                              </div>
+                              <ul class="text-muted-foreground list-inside list-disc space-y-2 text-sm leading-relaxed md:list-outside md:pl-5">
+                                {role.highlights.map((highlight) => (
+                                  <li>{highlight}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        'title' in job && (
+                          <div class="space-y-2">
+                            <div class="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                              <p class="text-foreground font-medium">{job.title}</p>
+                              <span class="text-muted-foreground font-mono text-xs tracking-wide uppercase">
+                                {job.period}
+                              </span>
+                            </div>
+                            <ul class="text-muted-foreground list-inside list-disc space-y-2 text-sm leading-relaxed md:list-outside md:pl-5">
+                              {job.highlights.map((highlight) => (
+                                <li>{highlight}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  ))
+                }
+              </div>
+            </section>
+
+            <section class="space-y-3">
+              <h2 class="text-foreground text-xl font-semibold tracking-tight">
+                Previous Experience
+              </h2>
+              <div class="text-muted-foreground space-y-2 text-sm">
+                {
+                  previousExperience.map((job) => (
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="text-foreground font-medium">{job.company}</span>
+                      <span aria-hidden="true" class="text-border">
+                        •
+                      </span>
+                      <span>{job.title}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </section>
+
+            <section class="space-y-3">
+              <h2 class="text-foreground text-xl font-semibold tracking-tight">Certifications</h2>
+              <div class="text-muted-foreground space-y-2 text-sm">
+                {
+                  certifications.map((cert) => (
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="text-foreground font-medium">•</span>
+                      <span>{cert}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </section>
+
+            <section class="space-y-3">
+              <h2 class="text-foreground text-xl font-semibold tracking-tight">Interests</h2>
+              <div class="text-muted-foreground flex flex-wrap gap-2 text-sm">
+                {
+                  profile.interests.map((interest) => (
+                    <span class="border-border bg-card/50 rounded-full border px-3 py-1">
+                      {interest}
+                    </span>
+                  ))
+                }
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+</Layout>

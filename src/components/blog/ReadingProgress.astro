@@ -1,0 +1,50 @@
+---
+// Reading progress bar - tracks scroll position through article
+---
+
+<div
+  id="reading-progress"
+  class="bg-primary fixed top-0 left-0 z-[60] h-1 transition-[width] duration-150 ease-out"
+  style="width: 0%"
+  aria-hidden="true"
+>
+</div>
+
+<script>
+  function setupReadingProgress() {
+    window.__readingProgressCleanup?.();
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const progressBar = document.getElementById('reading-progress');
+    const article = document.querySelector('article');
+
+    if (!progressBar || !article) return;
+
+    function updateProgress() {
+      const articleRect = article!.getBoundingClientRect();
+      const articleTop = window.scrollY + articleRect.top;
+      const articleHeight = article!.offsetHeight;
+      const windowHeight = window.innerHeight;
+      const scrollPosition = window.scrollY;
+
+      // Calculate progress through the article
+      const start = articleTop;
+      const end = articleTop + articleHeight - windowHeight;
+      const progress = Math.min(Math.max((scrollPosition - start) / (end - start), 0), 1);
+
+      progressBar!.style.width = `${progress * 100}%`;
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true, signal });
+    window.addEventListener('resize', updateProgress, { passive: true, signal });
+    updateProgress();
+
+    window.__readingProgressCleanup = () => controller.abort();
+  }
+
+  const init = () => setupReadingProgress();
+
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>

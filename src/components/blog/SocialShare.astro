@@ -1,0 +1,152 @@
+---
+interface Props {
+  title: string;
+  url: string;
+  tags?: string[];
+}
+
+const { title, url, tags = [] } = Astro.props;
+
+const encodedTitle = encodeURIComponent(title);
+const encodedUrl = encodeURIComponent(url);
+const hashtags = tags
+  .slice(0, 3)
+  .map((t) => t.replace(/\s+/g, ''))
+  .join(',');
+
+const shareLinks = [
+  {
+    name: 'Twitter',
+    href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}${hashtags ? `&hashtags=${hashtags}` : ''}`,
+    icon: 'twitter',
+  },
+  {
+    name: 'LinkedIn',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    icon: 'linkedin',
+  },
+  {
+    name: 'Copy Link',
+    href: '#',
+    icon: 'link',
+    action: 'copy',
+  },
+];
+---
+
+<div class="flex items-center gap-3">
+  <span class="text-muted-foreground font-mono text-sm">Share:</span>
+  {
+    shareLinks.map((link) => (
+      <button
+        data-share-action={link.action || 'open'}
+        data-share-url={link.action === 'copy' ? url : link.href}
+        class="border-border hover:border-primary hover:text-primary rounded-md border p-2 transition-colors"
+        aria-label={`Share on ${link.name}`}
+      >
+        {link.icon === 'twitter' && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
+            <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+          </svg>
+        )}
+        {link.icon === 'linkedin' && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+            <rect width="4" height="12" x="2" y="9" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        )}
+        {link.icon === 'link' && (
+          <>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="copy-icon"
+            >
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="check-icon hidden"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </>
+        )}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  function setupSocialShare() {
+    document.querySelectorAll('[data-share-action]').forEach((btn) => {
+      // Remove existing listeners by cloning
+      const newBtn = btn.cloneNode(true) as HTMLElement;
+      btn.parentNode?.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const action = newBtn.dataset.shareAction;
+        const url = newBtn.dataset.shareUrl;
+
+        if (action === 'copy' && url) {
+          await navigator.clipboard.writeText(url);
+          // Show check icon briefly
+          const copyIcon = newBtn.querySelector('.copy-icon');
+          const checkIcon = newBtn.querySelector('.check-icon');
+          if (copyIcon && checkIcon) {
+            copyIcon.classList.add('hidden');
+            checkIcon.classList.remove('hidden');
+            setTimeout(() => {
+              copyIcon.classList.remove('hidden');
+              checkIcon.classList.add('hidden');
+            }, 2000);
+          }
+        } else if (action === 'open' && url) {
+          window.open(url, '_blank', 'width=600,height=400,noopener,noreferrer');
+        }
+      });
+    });
+  }
+
+  setupSocialShare();
+  document.addEventListener('astro:page-load', setupSocialShare);
+</script>

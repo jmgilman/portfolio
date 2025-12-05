@@ -1,0 +1,90 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to h2 and h3 only
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <nav
+      id="table-of-contents"
+      class="fixed top-32 right-8 hidden max-h-[calc(100vh-10rem)] w-64 overflow-y-auto xl:block"
+      aria-label="Table of contents"
+    >
+      <h2 class="text-muted-foreground mb-4 font-mono text-sm font-semibold">
+        <span class="text-primary">//</span> On this page
+      </h2>
+      <ul class="space-y-2 text-sm">
+        {tocHeadings.map((heading) => (
+          <li class={heading.depth === 3 ? 'pl-4' : ''}>
+            <a
+              href={`#${heading.slug}`}
+              class="toc-link text-muted-foreground hover:text-foreground block py-1 transition-colors"
+              data-heading-slug={heading.slug}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<script>
+  function setupTableOfContents() {
+    window.__tocCleanup?.();
+
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const headings = document.querySelectorAll('article h2[id], article h3[id]');
+
+    if (tocLinks.length === 0 || headings.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute('id');
+          const tocLink = document.querySelector(`.toc-link[data-heading-slug="${id}"]`);
+
+          if (entry.isIntersecting) {
+            // Remove active from all
+            tocLinks.forEach((link) => {
+              link.classList.remove('text-primary', 'font-medium');
+              link.classList.add('text-muted-foreground');
+            });
+            // Add active to current
+            tocLink?.classList.remove('text-muted-foreground');
+            tocLink?.classList.add('text-primary', 'font-medium');
+          }
+        });
+      },
+      {
+        rootMargin: '-80px 0px -80% 0px',
+        threshold: 0,
+      }
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+
+    window.__tocCleanup = () => observer.disconnect();
+  }
+
+  const init = () => setupTableOfContents();
+
+  init();
+  document.addEventListener('astro:page-load', init);
+</script>
+
+<style is:global>
+  /* Smooth scroll offset for fixed header */
+  html {
+    scroll-padding-top: 6rem;
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+import { cn } from '@/lib/utils';
+
+type Props = astroHTML.JSX.HTMLAttributes & {
+  title: string;
+  iconColor?: string;
+  class?: string;
+};
+
+const { title, iconColor = 'text-primary', class: className, ...rest } = Astro.props;
+---
+
+<div
+  class={cn(
+    'relative bg-card border border-border rounded-lg p-6 transition-all duration-300',
+    'hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5',
+    'before:absolute before:left-0 before:top-4 before:bottom-4 before:w-1 before:rounded-r-full before:bg-primary/60 before:transition-all before:duration-300',
+    'hover:before:bg-primary hover:before:top-3 hover:before:bottom-3',
+    className
+  )}
+  {...rest}
+>
+  <div class="mb-4 flex items-center gap-3 pl-2">
+    <span class={cn('w-5 h-5 [&>svg]:w-5 [&>svg]:h-5', iconColor)}>
+      <slot name="icon" />
+    </span>
+    <h3 class="text-foreground font-semibold">{title}</h3>
+  </div>
+  <div class="pl-2">
+    <slot />
+  </div>
+</div>

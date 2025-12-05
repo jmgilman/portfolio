@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import { formatDateShort } from '@/lib/dates';
+
+interface Props {
+  currentSlug: string;
+  currentTags: string[];
+  limit?: number;
+}
+
+const { currentSlug, currentTags, limit = 3 } = Astro.props;
+
+const allPosts = await getCollection('blog');
+
+// Score posts by tag overlap
+const scoredPosts = allPosts
+  .filter((post) => post.id !== currentSlug)
+  .map((post) => {
+    const commonTags = post.data.tags.filter((tag) => currentTags.includes(tag));
+    return { post, score: commonTags.length };
+  })
+  .filter(({ score }) => score > 0)
+  .sort((a, b) => {
+    // Sort by score, then by date
+    if (b.score !== a.score) return b.score - a.score;
+    return b.post.data.date.valueOf() - a.post.data.date.valueOf();
+  })
+  .slice(0, limit);
+---
+
+{
+  scoredPosts.length > 0 && (
+    <section class="border-border mt-16 border-t pt-8">
+      <h2 class="mb-6 font-mono text-xl font-semibold">
+        <span class="text-primary">//</span> Related Posts
+      </h2>
+      <div class="grid gap-4">
+        {scoredPosts.map(({ post }) => (
+          <a
+            href={`/blog/${post.id}`}
+            class="group border-border hover:border-primary/50 block rounded-lg border p-4 transition-colors"
+          >
+            <div class="text-muted-foreground mb-2 flex items-center gap-2 text-xs">
+              <span>{formatDateShort(post.data.date)}</span>
+              <span>·</span>
+              <span>{post.data.readTime}</span>
+            </div>
+            <h3 class="group-hover:text-primary font-medium transition-colors">
+              {post.data.title}
+            </h3>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}

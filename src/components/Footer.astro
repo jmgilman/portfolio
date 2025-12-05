@@ -1,0 +1,119 @@
+---
+import { profile } from '../data/profile';
+import Icon from './ui/Icon.astro';
+
+const currentYear = new Date().getFullYear();
+
+const socialLinks = [
+  {
+    href: profile.social.github,
+    label: 'GitHub',
+    icon: 'github' as const,
+  },
+  {
+    href: profile.social.linkedin,
+    label: 'LinkedIn',
+    icon: 'linkedin' as const,
+  },
+  {
+    href: profile.social.twitter,
+    label: 'Twitter',
+    icon: 'twitter' as const,
+  },
+  {
+    href: `mailto:${profile.email}`,
+    label: 'Email',
+    icon: 'mail' as const,
+  },
+];
+
+const navLinks = ['Blog', 'Projects', 'Resume', 'Contact'];
+---
+
+<footer class="border-border bg-card border-t">
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-4">
+      <!-- Brand -->
+      <div class="md:col-span-2">
+        <a href="/" class="mb-4 flex items-center gap-2 font-mono text-lg font-semibold">
+          <svg
+            class="text-primary h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="4 17 10 11 4 5"></polyline>
+            <line x1="12" y1="19" x2="20" y2="19"></line>
+          </svg>
+          <span class="text-foreground">jmgilman</span>
+          <span class="text-primary">.com</span>
+        </a>
+        <p class="text-muted-foreground max-w-md text-sm">
+          {profile.tagline}. Building reliable infrastructure for the modern web.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-foreground mb-4 font-mono text-sm font-semibold">
+          <span class="text-primary">//</span> Navigation
+        </h3>
+        <ul class="space-y-2">
+          {
+            navLinks.map((item) => (
+              <li>
+                <a
+                  href={`/${item.toLowerCase()}`}
+                  class="text-muted-foreground hover:text-primary text-sm transition-colors"
+                >
+                  {item}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Social -->
+      <div>
+        <h3 class="text-foreground mb-4 font-mono text-sm font-semibold">
+          <span class="text-primary">//</span> Connect
+        </h3>
+        <div class="flex gap-4">
+          {
+            socialLinks.map((link) => (
+              <a
+                href={link.href}
+                target={link.icon !== 'mail' ? '_blank' : undefined}
+                rel={link.icon !== 'mail' ? 'noopener noreferrer' : undefined}
+                class="text-muted-foreground hover:text-primary transition-colors"
+                aria-label={link.label}
+              >
+                {link.icon && <Icon name={link.icon} class="h-5 w-5" />}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div
+      class="border-border mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row"
+    >
+      <p class="text-muted-foreground font-mono text-sm">
+        <span class="text-primary">©</span>
+        {currentYear}
+        {profile.name}. All rights reserved.
+      </p>
+      <p class="text-muted-foreground font-mono text-xs">
+        <span class="text-muted-foreground/50">// </span>
+        Built with Astro + TypeScript
+      </p>
+    </div>
+  </div>
+</footer>

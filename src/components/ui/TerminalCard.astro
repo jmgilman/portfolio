@@ -1,0 +1,26 @@
+---
+import { cn } from '@/lib/utils';
+
+type Props = astroHTML.JSX.HTMLAttributes & {
+  title?: string;
+  class?: string;
+};
+
+const { title, class: className, ...rest } = Astro.props;
+---
+
+<div class={cn('bg-card border border-border rounded-lg overflow-hidden', className)} {...rest}>
+  <!-- Terminal Header -->
+  <div class="bg-secondary/50 border-border flex items-center gap-2 border-b px-4 py-3">
+    <div class="flex gap-1.5">
+      <div class="bg-destructive/80 h-3 w-3 rounded-full"></div>
+      <div class="bg-terminal-yellow/80 h-3 w-3 rounded-full"></div>
+      <div class="bg-primary/80 h-3 w-3 rounded-full"></div>
+    </div>
+    {title && <span class="text-muted-foreground ml-2 font-mono text-xs">{title}</span>}
+  </div>
+  <!-- Terminal Content -->
+  <div class="p-4 font-mono text-sm">
+    <slot />
+  </div>
+</div>
